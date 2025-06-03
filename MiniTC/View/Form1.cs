@@ -34,8 +34,6 @@ namespace MiniTC
         private void ButtonCopy_Click(object sender, EventArgs e)
         {
 
-            MessageBox.Show($"selected left: {listBoxLeft.SelectedItem}\n" +
-                   $"selected right: {listBoxRight.SelectedItem}");
 
             try
             {
@@ -61,19 +59,33 @@ namespace MiniTC
         private void CopyItem(PanelTC sourcePanel, PanelTC destPanel, ListBox sourceList, TextBox sourcePath, TextBox destPath)
         {
             var selected = sourceList.SelectedItem.ToString();
-            if (selected.StartsWith("<C>"))
+
+            if (selected.StartsWith("<D>"))
             {
                 MessageBox.Show("Kopiowanie folderów nie jest obsługiwane.", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
+            if (selected.StartsWith("<D> "))
+                selected = selected.Substring(4);
+
+            selected = Path.GetFileName(selected); // <- ważne!
+
+            string srcPath = sourcePath.Text.TrimEnd('\\');
+            string dstPath = destPath.Text.TrimEnd('\\');
+
             var sourceFile = Path.Combine(sourcePath.Text, selected);
-            var destFile = Path.Combine(destPath.Text, selected);
+
+            string destFile = Path.Combine(dstPath, selected);
+
+            MessageBox.Show($"Kopiowanie z:\n{sourceFile}\ndo:\n{destFile}");
 
             File.Copy(sourceFile, destFile, true);
             destPanel.LoadDirectoryContent(destPath.Text);
             MessageBox.Show("Plik skopiowany pomyślnie!", "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+
 
         #region Properties for PanelWrapper
         public ComboBox comboBoxLeft => comboBox1;

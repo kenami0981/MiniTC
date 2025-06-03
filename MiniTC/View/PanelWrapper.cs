@@ -47,9 +47,13 @@ namespace MiniTC.View
                 var selected = listBox.SelectedItem?.ToString();
                 if (selected == "..")
                     return "..";
-                if (selected?.StartsWith($"<C> ") == true)
+                if (selected?.StartsWith("<D> ") == true)
                     return Path.Combine(pathBox.Text, selected.Substring(4));
+
                 return Path.Combine(pathBox.Text, selected);
+                
+                
+               
             }
         }
 

@@ -88,11 +88,25 @@ namespace MiniTC.Presenter
 
                 foreach (var dir in Directory.GetDirectories(path))
                 {
-                    content.Add($"<{path[0]}> {Path.GetFileName(dir)}");
+                    try
+                    {
+                        // Próbujemy uzyskać dostęp do folderu — jeśli się nie da, pomijamy
+                        var _ = Directory.GetFiles(dir); // lub Directory.GetDirectories(dir)
+                        content.Add($"<D> {Path.GetFileName(dir)}");
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        // Folder pomijamy
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Błąd folderu '{dir}': {ex.Message}", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
 
-
                 content.AddRange(Directory.GetFiles(path).Select(Path.GetFileName));
+
+
 
 
                 _view.CurrentPath = path;
